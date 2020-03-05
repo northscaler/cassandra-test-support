@@ -1,23 +1,44 @@
 #!/usr/bin/env sh
 
-# usage: $0 [tag [container [port]]]
+# Usage is via env vars:
+#   CASSANDRA_TEST_SUPPORT_TAG: docker image tag to use, default "latest"
+#   CASSANDRA_TEST_SUPPORT_PORT: visible port to map to container port, default is content of file default-cassandra-test-port
+#   CASSANDRA_TEST_SUPPORT_CONTAINER: name of container, default is content of file default-cassandra-test-container
+#   CASSANDRA_TEST_SUPPORT_CONTAINER_PORT: cassandra client port in container, default 9042
+#   CASSANDRA_TEST_SUPPORT_IMAGE: docker image name, default "cassandra"
+#   CASSANDRA_TEST_SUPPORT_FORCE_START_CONTAINER: set to nonzero string to force start even if in CI pipeline, default ""
 
 THIS_DIR="$(cd "$(dirname "$0")"; pwd)"
 
-DEFAULT_TAG=latest
-DEFAULT_CONTAINER="$(cat "$THIS_DIR/default-cassandra-test-container")"
-DEFAULT_PORT="$(cat "$THIS_DIR/default-cassandra-test-port")"
+CASSANDRA_TEST_SUPPORT_TAG=${CASSANDRA_TEST_SUPPORT_TAG:-latest}
+CASSANDRA_TEST_SUPPORT_CONTAINER_PORT=${CASSANDRA_TEST_SUPPORT_CONTAINER_PORT:-9042}
+CASSANDRA_TEST_SUPPORT_CONTAINER_IMAGE=${CASSANDRA_TEST_SUPPORT_CONTAINER_IMAGE:-cassandra}
 
-TAG=${1:-$DEFAULT_TAG}
-CONTAINER="${2:-$DEFAULT_CONTAINER}"
-PORT=${3:-$DEFAULT_PORT}
-
-RUNNING=$(docker inspect --format="{{ .State.Running }}" "$CONTAINER" 2> /dev/null)
-
-if [ $? -eq 1 ] || [ "$RUNNING" == "false" ]; then
-  echo "container '$CONTAINER' does not exist or is stopped - recreating"
-  # make sure it's gone
-  docker ps -a | grep "$CONTAINER" | awk '{ print $1}' | xargs docker rm --force
-
-  docker run --name "$CONTAINER" -p $PORT:9042 -d cassandra:$TAG
+if [ -z "$CASSANDRA_TEST_SUPPORT_CONTAINER" ]; then
+  CASSANDRA_TEST_SUPPORT_CONTAINER="$(cat $THIS_DIR/default-cassandra-test-container)"
 fi
+
+if [ -z "$CASSANDRA_TEST_SUPPORT_PORT" ]; then
+  CASSANDRA_TEST_SUPPORT_PORT="$(cat $THIS_DIR/default-cassandra-test-port)"
+fi
+
+RUNNING=$(docker inspect --format="{{ .State.Running }}" "$CASSANDRA_TEST_SUPPORT_CONTAINER" 2> /dev/null)
+
+if [ "$RUNNING" == "true" ]; then
+  exit 0
+fi
+
+# else container is stopped or unknown - forcefully recreate
+echo "container '$CASSANDRA_TEST_SUPPORT_CONTAINER' is stopped or unknown - recreating"
+
+# make sure it's gone
+docker ps -a | \
+  grep "$CASSANDRA_TEST_SUPPORT_CONTAINER" | \
+  awk '{ print $1}' | \
+  xargs docker rm --force
+
+docker run \
+  --name "$CASSANDRA_TEST_SUPPORT_CONTAINER" \
+  -p "$CASSANDRA_TEST_SUPPORT_PORT:$CASSANDRA_TEST_SUPPORT_CONTAINER_PORT" \
+  -d \
+  "$CASSANDRA_TEST_SUPPORT_CONTAINER_IMAGE:$CASSANDRA_TEST_SUPPORT_TAG"

@@ -22,6 +22,8 @@ describe('integration tests of cassandra', function () {
         protocolOptions: {
           port: port || cassandraConnect.defaultPort
         }
+      }, {
+        forceStartContainer: true // so that this project can build in its own CI pipeline!
       })
       const keyspace = `x${uuid().replace(/-/g, '')}`
       const response = await client.execute(`CREATE KEYSPACE ${keyspace} WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 1};`)

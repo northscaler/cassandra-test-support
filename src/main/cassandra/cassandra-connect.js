@@ -27,11 +27,14 @@ async function cassandraConnect ({
   } = {}
 } = {}, {
   maxTries = 10,
-  retryPauseMillis = 500
+  retryPauseMillis = 500,
+  scriptArgs = [],
+  pauseMillis = 0,
+  forceStartContainer = false
 } = {}) {
   if (connection) return connection
 
-  await startCassandra()
+  await startCassandra({ scriptArgs, pauseMillis, forceStartContainer })
 
   let tries = 0
   do {
