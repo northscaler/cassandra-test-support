@@ -4,12 +4,13 @@
   "description": "Cassandra Node.js Development Test Support Library",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/northscaler/protected/cassandra-test-support.git"
+    "url": "https://gitlab.com/northscaler-public/cassandra-test-support.git"
   },
   "keywords": [
-    "cassandra"
+    "cassandra",
+    "test"
   ],
-  "license": "",
+  "license": "MIT",
   "engines": {
     "node": ">=8.6.0"
   },
