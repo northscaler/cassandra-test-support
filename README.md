@@ -2,14 +2,16 @@
 
 Handy-dandy Cassandra integration testing utility that starts a local Docker container running Cassandra if you're not running in a CI/CD pipeline.
 This allows you to run integration tests locally in a manner similar to how they'd be run in the CI/CD pipeline. 
+This module does nothing when running in a CI build pipeline, because Cassandra should be configured as part of the build via something like [`.gitlab-ci.yml`'s `services`](https://docs.gitlab.com/ee/ci/yaml/#services) element.
 
-This is intended to be installed in your project in `devDependencies`.
+This package is intended to be installed in your project in `devDependencies`.
+
+Your application must install its desired version of [`cassandra-driver`](https://www.npmjs.com/package/cassandra-driver).
 
 > NOTE: requires a Unix-y shell (`/usr/bin/env sh`) to be available.
 >This is not designed to run on Windows; PRs/MRs welcome.
->If you're on Windows, use the Linux subsystem (if you don't have that, sorry).
 
-See [src/test/integration/cassandra/cassandra.spec.js] for usage, but it's basically
+Usage:
 ```javascript
 const cassandraConnect = require('cassandra-connect')
 
@@ -24,7 +26,7 @@ The default configuration is pretty conventional, with the sole exception of the
 Instead of `9042`, which might already be in use on developers' machines when they run integration tests, the default configuration uses `19042`.
 It is a `TODO` to search for an available port.
 
->NOTE: This module detects when it's running in a CI/CD pipeline by seeing if the environment variable `CI_COMMIT_SHA` is of nonzero length.
+>NOTE: This module detects when it's running in a CI/CD pipeline by seeing if the environment variable `CI` is of nonzero length.
 
 ### Environment variables
 

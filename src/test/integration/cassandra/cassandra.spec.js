@@ -15,7 +15,13 @@ const localDataCenter = process.env.CASSANDRA_TEST_SUPPORT_LOCAL_DATA_CENTER?.tr
 describe('integration tests of cassandra', function () {
   describe('cassandra-connect', function () {
     it('should work', async function () {
+      if (process.env.CI) { // don't run this in CI pipeline
+        console.log('skipping because in CI pipeline')
+        return
+      }
+
       this.timeout(100000)
+
       const client = await cassandraConnect({
         contactPoints: contactPoints?.split(',').map(it => it.trim()) || ['localhost'],
         localDataCenter,
