@@ -19,6 +19,8 @@ stages:
 
 build:
   stage: build
+  services:
+    - docker:dind
   script:
     - npm run build
 

@@ -3,7 +3,10 @@
 Handy-dandy Cassandra integration testing utility that starts a local Docker container running Cassandra if you're not running in a CI/CD pipeline.
 This allows you to run integration tests locally in a manner similar to how they'd be run in the CI/CD pipeline. 
 
-> NOTE: requires a unix-y shell (`/usr/bin/env sh`) to be available.
+This is intended to be installed in your project in `devDependencies`.
+
+> NOTE: requires a Unix-y shell (`/usr/bin/env sh`) to be available.
+>This is not designed to run on Windows; PRs/MRs welcome.
 >If you're on Windows, use the Linux subsystem (if you don't have that, sorry).
 
 See [src/test/integration/cassandra/cassandra.spec.js] for usage, but it's basically
@@ -25,4 +28,8 @@ It is a `TODO` to search for an available port.
 
 ### Environment variables
 
-The following environment variables can be set to  
+The following environment variables can be set to configure it:
+* `CASSANDRA_TEST_SUPPORT_TAG`: The tag of the [`cassandra` Docker image](https://hub.docker.com/_/cassandra), default `latest`.
+* `CASSANDRA_TEST_SUPPORT_CONTAINER`: The name of the container that will be launched, default is the _name found in file_ `cassandra/default-cassandra-test-container`.
+* `CASSANDRA_TEST_SUPPORT_PORT`: The name of the client port that will listen on, default is the _port found in file_ `cassandra/default-cassandra-test-port`.
+
