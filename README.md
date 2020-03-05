@@ -13,7 +13,7 @@ Your application must install its desired version of [`cassandra-driver`](https:
 
 Usage:
 ```javascript
-const cassandraConnect = require('cassandra-connect')
+const cassandraConnect = require('@northscaler/cassandra-test-support')
 
 const client = await cassandraConnect()
 

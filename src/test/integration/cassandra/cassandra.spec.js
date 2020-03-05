@@ -6,7 +6,7 @@ chai.use(require('dirty-chai'))
 const expect = chai.expect
 const uuid = require('uuid/v4')
 
-const cassandraConnect = require('../../../main/cassandra')
+const cassandraConnect = require('../../../main')
 
 const contactPoints = process.env.CASSANDRA_TEST_SUPPORT_HOST?.trim()
 const port = parseInt(process.env.CASSANDRA_TEST_SUPPORT_PORT?.trim())
