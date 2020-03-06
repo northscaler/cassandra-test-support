@@ -47,8 +47,6 @@
   "dependencies": {
     "@babel/polyfill": "7.7.0",
     "@northscaler/error-support": "3.0.1",
-    "fs-extra": "8.1.0",
-    "lodash": "4.17.15",
     "uuid": "3.3.3"
   },
   "devDependencies": {

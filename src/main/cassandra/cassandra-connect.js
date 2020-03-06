@@ -47,7 +47,6 @@ async function cassandraConnect ({ // cassandra opts
   let tries = 0
   do {
     try {
-      console.log(arguments)
       connection = new cassandra.Client(arguments[0])
       await connection.execute('select * from system_schema.keyspaces;')
     } catch (e) {
