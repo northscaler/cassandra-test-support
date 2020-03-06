@@ -8,10 +8,6 @@ const uuid = require('uuid/v4')
 
 const cassandraConnect = require('../../../main')
 
-const contactPoints = process.env.CASSANDRA_TEST_SUPPORT_HOST?.trim()
-const port = parseInt(process.env.CASSANDRA_TEST_SUPPORT_PORT?.trim())
-const localDataCenter = process.env.CASSANDRA_TEST_SUPPORT_LOCAL_DATA_CENTER?.trim() || 'datacenter1'
-
 describe('integration tests of cassandra', function () {
   describe('cassandra-connect', function () {
     it('should work', async function () {
@@ -22,15 +18,7 @@ describe('integration tests of cassandra', function () {
 
       this.timeout(100000)
 
-      const client = await cassandraConnect({
-        contactPoints: contactPoints?.split(',').map(it => it.trim()) || ['localhost'],
-        localDataCenter,
-        protocolOptions: {
-          port: port || cassandraConnect.defaultPort
-        }
-      }, {
-        forceStartContainer: true // so that this project can build in its own CI pipeline!
-      })
+      const client = await cassandraConnect()
       const keyspace = `x${uuid().replace(/-/g, '')}`
       const response = await client.execute(`CREATE KEYSPACE ${keyspace} WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 1};`)
       expect(response?.info?.isSchemaInAgreement).to.be.true()

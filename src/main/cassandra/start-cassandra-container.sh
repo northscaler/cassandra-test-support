@@ -6,7 +6,6 @@
 #   CASSANDRA_TEST_SUPPORT_CONTAINER: name of container, default is content of file default-cassandra-test-container
 #   CASSANDRA_TEST_SUPPORT_CONTAINER_PORT: cassandra client port in container, default 9042
 #   CASSANDRA_TEST_SUPPORT_IMAGE: docker image name, default "cassandra"
-#   CASSANDRA_TEST_SUPPORT_FORCE_START_CONTAINER: set to nonzero string to force start even if in CI pipeline, default ""
 
 THIS_DIR="$(cd "$(dirname "$0")"; pwd)"
 

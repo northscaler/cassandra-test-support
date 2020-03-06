@@ -6,6 +6,10 @@ const pause = require('./pause')
 
 const startCassandra = require('./start-cassandra')
 
+const defaultContainerName = fs.readFileSync(`${__dirname}/default-cassandra-test-container`).toString().trim()
+const defaultPort = parseInt(fs.readFileSync(`${__dirname}/default-cassandra-test-port`))
+const defaultLocalDataCenter = fs.readFileSync(`${__dirname}/default-cassandra-test-local-data-center`).toString().trim()
+
 let connection
 
 /**
@@ -17,28 +21,33 @@ let connection
  * @param {object} [arg1] Connection retry options.
  * @param {number} [arg1.maxTries=10] The max number of tries to connect.
  * @param {number} [arg1.retryPauseMillis=500] The number of milliseconds to pause between connection attempts.
- * @return {Promise<Client|*>}
+ * @return {Promise<Client>}
  */
-async function cassandraConnect ({
-  contactPoints = [cassandraConnect.defaultContainerName],
-  localDataCenter = cassandraConnect.defaultLocalDataCenter,
+async function cassandraConnect ({ // cassandra opts
+  contactPoints,
+  localDataCenter,
   protocolOptions: {
-    port = cassandraConnect.defaultPort
+    port
   } = {}
-} = {}, {
+} = {}, { // cassandraConnect opts
   maxTries = 10,
   retryPauseMillis = 500,
   scriptArgs = [],
-  pauseMillis = 0,
-  forceStartContainer = false
+  pauseMillis = 0
 } = {}) {
   if (connection) return connection
 
-  await startCassandra({ scriptArgs, pauseMillis, forceStartContainer })
+  arguments[0] = arguments[0] || {}
+  arguments[0].contactPoints = arguments[0].contactPoints || ['localhost']
+  arguments[0].localDataCenter = arguments[0].localDataCenter || defaultLocalDataCenter
+  arguments[0].protocolOptions = arguments[0].protocolOptions || { port: defaultPort }
+
+  await startCassandra({ scriptArgs, pauseMillis })
 
   let tries = 0
   do {
     try {
+      console.log(arguments)
       connection = new cassandra.Client(arguments[0])
       await connection.execute('select * from system_schema.keyspaces;')
     } catch (e) {
@@ -56,18 +65,18 @@ async function cassandraConnect ({
  * The default test port that Cassandra will listen on for incoming `Client`s.
  * @type {number}
  */
-cassandraConnect.defaultPort = parseInt(fs.readFileSync(`${__dirname}/default-cassandra-test-port`))
+cassandraConnect.defaultPort = defaultPort
 
 /**
  * The default Cassandra test container name.
  * @type {string}
  */
-cassandraConnect.defaultContainerName = fs.readFileSync(`${__dirname}/default-cassandra-test-container`).toString()
+cassandraConnect.defaultContainerName = defaultContainerName
 
 /**
  * The default Cassandra test `localDataCenter` name.
  * @type {string}
  */
-cassandraConnect.defaultLocalDataCenter = fs.readFileSync(`${__dirname}/default-cassandra-test-local-data-center`).toString()
+cassandraConnect.defaultLocalDataCenter = defaultLocalDataCenter
 
 module.exports = cassandraConnect

@@ -30,9 +30,9 @@ It is a `TODO` to search for an available port.
 
 ### Environment variables
 
-The following environment variables can be set to configure it:
-* CASSANDRA_TEST_SUPPORT_TAG: The tag of the [`cassandra` Docker image](https://hub.docker.com/_/cassandra)  or custom image to use, default "latest"
-* CASSANDRA_TEST_SUPPORT_PORT: visible client port on `localhost` to map to container port, default is content of `cassandra/file default-cassandra-test-port`
+The following environment variables can be set to configure the docker container:
+* CASSANDRA_TEST_SUPPORT_TAG: The tag of the [`cassandra` Docker image](https://hub.docker.com/_/cassandra)  or custom image to use, default `latest`
+* CASSANDRA_TEST_SUPPORT_PORT: visible client port on `localhost` to map to container port, default is content of `cassandra/default-cassandra-test-port`
 * CASSANDRA_TEST_SUPPORT_CONTAINER: name of container, default is content of file `cassandra/default-cassandra-test-container`
 * CASSANDRA_TEST_SUPPORT_CONTAINER_PORT: cassandra client port in container, default `9042`
 * CASSANDRA_TEST_SUPPORT_IMAGE: docker image name, default `cassandra`
