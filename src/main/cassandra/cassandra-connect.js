@@ -6,9 +6,9 @@ const pause = require('./pause')
 
 const startCassandra = require('./start-cassandra')
 
-const defaultContainerName = fs.readFileSync(`${__dirname}/default-cassandra-test-container`).toString().trim()
+const defaultContainerName = fs.readFileSync(`${__dirname}/default-cassandra-test-container`).toString('utf8').trim()
 const defaultPort = parseInt(fs.readFileSync(`${__dirname}/default-cassandra-test-port`))
-const defaultLocalDataCenter = fs.readFileSync(`${__dirname}/default-cassandra-test-local-data-center`).toString().trim()
+const defaultLocalDataCenter = fs.readFileSync(`${__dirname}/default-cassandra-test-local-data-center`).toString('utf8').trim()
 
 let connection
 
