@@ -42,15 +42,21 @@ async function cassandraConnect ({ // cassandra opts
   arguments[0].localDataCenter = arguments[0].localDataCenter || defaultLocalDataCenter
   arguments[0].protocolOptions = arguments[0].protocolOptions || { port: defaultPort }
 
+  let start = Date.now()
   await startCassandra({ scriptArgs, pauseMillis })
+  console.log(`started cassandra container in ${Date.now() - start} ms`)
 
   let tries = 0
+  start = Date.now()
   do {
     try {
       connection = new cassandra.Client(arguments[0])
       await connection.execute('select * from system_schema.keyspaces;')
+      console.log(`connected to cassandra in ${Date.now() - start} ms`)
     } catch (e) {
+      const time = Date.now() - start
       if (++tries >= maxTries) throw e
+      console.log(`retrying because connection to cassandra failed after ${time} ms`)
       connection = null
     }
 

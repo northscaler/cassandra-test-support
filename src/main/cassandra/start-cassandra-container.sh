@@ -24,6 +24,7 @@ fi
 RUNNING=$(docker inspect --format="{{ .State.Running }}" "$CASSANDRA_TEST_SUPPORT_CONTAINER" 2> /dev/null)
 
 if [ "$RUNNING" == "true" ]; then
+  echo "container '$CASSANDRA_TEST_SUPPORT_CONTAINER' is running - not launching"
   exit 0
 fi
 
