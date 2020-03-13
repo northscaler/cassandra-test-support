@@ -50,8 +50,6 @@ async function cassandraConnect ({ // cassandra opts
     console.log('skipped launching container')
   }
 
-
-
   let tries = 0
   start = Date.now()
   do {
