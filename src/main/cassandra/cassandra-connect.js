@@ -43,7 +43,7 @@ async function cassandraConnect ({ // cassandra opts
   arguments[0].protocolOptions = arguments[0].protocolOptions || { port: defaultPort }
 
   let start = Date.now()
-  await startCassandra({ scriptArgs, pauseMillis })
+  if (!process.env.CI) await startCassandra({ scriptArgs, pauseMillis })
   console.log(`started cassandra container in ${Date.now() - start} ms`)
 
   let tries = 0
