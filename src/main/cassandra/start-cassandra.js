@@ -7,6 +7,6 @@ module.exports = async ({
   scriptArgs = [],
   pauseMillis = 0
 } = {}) => {
-  console.log(`${cp.execFileSync(`${__dirname}/start-cassandra.sh`, scriptArgs)}`)
+  console.log(cp.execFileSync(`${__dirname}/start-cassandra.sh`, scriptArgs).toString())
   if ((pauseMillis = parseInt(pauseMillis))) await pause(pauseMillis)
 }
