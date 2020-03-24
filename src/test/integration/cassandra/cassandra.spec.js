@@ -18,7 +18,12 @@ describe('integration tests of cassandra', function () {
 
       this.timeout(100000)
 
-      const client = await cassandraConnect()
+      const client = await cassandraConnect(undefined, {
+        connectionErrorListener: (e, tries) => {
+          console.log(`After ${tries} tr${tries === 1 ? 'y' : 'ies'}, got error: ${e}:`)
+          console.log(e)
+        }
+      })
       const keyspace = `x${uuid().replace(/-/g, '')}`
       const response = await client.execute(`CREATE KEYSPACE ${keyspace} WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 1};`)
       expect(response?.info?.isSchemaInAgreement).to.be.true()
