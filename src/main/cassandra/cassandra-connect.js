@@ -33,7 +33,8 @@ async function cassandraConnect ({ // cassandra opts
   maxTries = 10,
   retryPauseMillis = 500,
   scriptArgs = [],
-  pauseMillis = 0
+  pauseMillis = 0,
+  connectionErrorListener
 } = {}) {
   if (connection) return connection
 
@@ -58,8 +59,10 @@ async function cassandraConnect ({ // cassandra opts
       await connection.execute('select * from system_schema.keyspaces;')
       console.log(`connected to cassandra in ${Date.now() - start} ms`)
     } catch (e) {
+      ++tries
+      if (typeof connectionErrorListener === 'function') connectionErrorListener(e, tries)
       const time = Date.now() - start
-      if (++tries >= maxTries) throw e
+      if (tries >= maxTries) throw e
       console.log(`retrying because connection to cassandra failed after ${time} ms`)
       connection = null
     }
