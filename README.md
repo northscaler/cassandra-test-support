@@ -36,3 +36,7 @@ The following environment variables can be set to configure the docker container
 * CASSANDRA_TEST_SUPPORT_CONTAINER: name of container, default is content of file `cassandra/default-cassandra-test-container`
 * CASSANDRA_TEST_SUPPORT_CONTAINER_PORT: cassandra client port in container, default `9042`
 * CASSANDRA_TEST_SUPPORT_IMAGE: docker image name, default `cassandra`
+  
+The following values were added to support the datastax [`dse-server` image](https://hub.docker.com/r/datastax/dse-server)
+* CASSANDRA_TEST_SUPPORT_DS_LICENSE: default `DS_LICENSE`
+* CASSANDRA_TEST_SUPPORT_DS_LICENSE_VALUE: default `accept`
